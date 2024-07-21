@@ -1,5 +1,5 @@
 # Connect3-Game
-Connect3 is an Android game inspired by the classic tic-tac-toe (noughts and crosses, Xs and Os) game
+Connect3 is an Android game inspired by the classic tic-tac-toe (noughts and crosses, Xs and Os) game.
 This project is under development and serves as a practice to hone Android development skills.
 ## Introduction
 Connect3 is a two-player game where players take turns to place their pieces on a 3x3 grid. The objective is to place three of your marks in a horizontal, vertical, or diagonal row to win.
