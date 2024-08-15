@@ -13,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
     // Memory for the slots: 2 means there's nothing initially on that slot
     // 9 two's for nine slots(3*3)
     int[] gameState = {2,2,2,2,2,2,2,2,2};
+    // There are 8 different ways of wining this game(3 rows, 3 columns, and 2 diagonals). Let's define them:
+    int [][] winningPositions = {{0,1,2}, {3,4,5}, {6,7,8}, {0,3,6}, {1,4,7}, {2,5,8}, {0,4,8}, {2,4,6}};
     public void dropIn(View view){
         //Get the image tapped on
         ImageView counter = (ImageView) view;
@@ -39,6 +41,18 @@ public class MainActivity extends AppCompatActivity {
 
         //Animate the ImageView back down
         counter.animate().translationYBy(1000f).setDuration(200);
+        //Loop through the winningPositions
+            for (int[] winningPosition : winningPositions){
+                if(gameState[winningPosition[0]] == gameState[winningPosition[1]] &&
+                        gameState[winningPosition[1]] == gameState[winningPosition[2]]
+                && gameState[winningPosition[0]]!=2);{
+                    //Display in the console the winner just to check that our logic's working
+
+                    System.out.println(gameState[winningPosition[0]]);
+                }
+
+
+            }
 
 
     }}
