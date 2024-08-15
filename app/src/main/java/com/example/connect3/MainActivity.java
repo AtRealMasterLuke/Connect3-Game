@@ -10,11 +10,22 @@ public class MainActivity extends AppCompatActivity {
 
     // green = 0, blue = 1;
     int activePlayer = 0;
+    // Memory for the slots: 2 means there's nothing initially on that slot
+    // 9 two's for nine slots(3*3)
+    int[] gameState = {2,2,2,2,2,2,2,2,2};
     public void dropIn(View view){
         //Get the image tapped on
         ImageView counter = (ImageView) view;
         //Pushes the image up the screen by 1000 pixels
-        counter.setTranslationY(-1000f);
+
+        //Displaying the selected tag to the console
+        System.out.println(counter.getTag().toString());
+        int tappedTag = Integer.parseInt(counter.getTag().toString());
+
+        if (gameState[tappedTag] == 2){
+            gameState[tappedTag] = activePlayer;
+            counter.setTranslationY(-1000f);
+
         if (activePlayer == 0){
             // Set the green circle to the ImageView
             counter.setImageResource(R.drawable.green);
@@ -30,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         counter.animate().translationYBy(1000f).setDuration(200);
 
 
-    }
+    }}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
