@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import com.google.android.material.animation.AnimationUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,10 +48,25 @@ public class MainActivity extends AppCompatActivity {
             for (int[] winningPosition : winningPositions){
                 if(gameState[winningPosition[0]] == gameState[winningPosition[1]] &&
                         gameState[winningPosition[1]] == gameState[winningPosition[2]]
-                && gameState[winningPosition[0]]!=2);{
+                && gameState[winningPosition[0]]!=2){
                     //Display in the console the winner just to check that our logic's working
 
                     System.out.println(gameState[winningPosition[0]]);
+                    //Display the playAgainLayout when someone has won
+                    LinearLayout layout = (LinearLayout)findViewById(R.id.playAgainLayout);
+                    if (layout != null) {
+                        layout.setVisibility(View.VISIBLE);
+                        layout.setScaleX(0.7f);
+                        layout.setScaleY(0.7f);
+                        layout.setAlpha(0f);
+                        layout.animate()
+                                .scaleX(1f)
+                                .scaleY(1f)
+                                .alpha(1f)
+                                .setDuration(500)
+                                .setStartDelay(0)
+                                .start();
+                    }
                 }
 
 
