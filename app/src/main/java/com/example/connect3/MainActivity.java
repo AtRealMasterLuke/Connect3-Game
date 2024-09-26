@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.animation.AnimationUtils;
 
@@ -49,9 +51,16 @@ public class MainActivity extends AppCompatActivity {
                 if(gameState[winningPosition[0]] == gameState[winningPosition[1]] &&
                         gameState[winningPosition[1]] == gameState[winningPosition[2]]
                 && gameState[winningPosition[0]]!=2){
-                    //Display in the console the winner just to check that our logic's working
+                    String winner = "Blue";// We've set it to Blue by default
 
-                    System.out.println(gameState[winningPosition[0]]);
+                    if (gameState[winningPosition[0]] == 0){
+                        winner = "Green";
+
+                    }
+
+                    //Update the winner message to show the winner before our layout appears
+                    TextView winnerMessage = (TextView) findViewById(R.id.winnerMessage);
+                    winnerMessage.setText(winner + " has won!");
                     //Display the playAgainLayout when someone has won
                     LinearLayout layout = (LinearLayout)findViewById(R.id.playAgainLayout);
                     if (layout != null) {
@@ -74,9 +83,25 @@ public class MainActivity extends AppCompatActivity {
 
 
     }}
+    public void playAgain(View view) {
+        LinearLayout layout = (LinearLayout)findViewById(R.id.playAgainLayout);
+        layout.setVisibility(View.INVISIBLE);
+        //set the game and player back to the defaults
+        activePlayer = 0;
+        for (int i = 0; i < gameState.length; i++){
+            gameState[i] = 2;
+        }
+        //Loop through all our images in the grid and remove their source
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayoutID);
+        for (int i = 0; i < gridLayout.getChildCount(); i++){
+            ((ImageView)gridLayout.getChildAt(i)).setImageResource(0);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
+
 }
