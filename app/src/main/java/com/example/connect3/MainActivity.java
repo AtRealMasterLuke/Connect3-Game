@@ -15,12 +15,16 @@ public class MainActivity extends AppCompatActivity {
 
     // green = 0, blue = 1;
     int activePlayer = 0;
+    //variable to keep track of game state(active or not)
+    boolean gameIsActive = true;
+
     // Memory for the slots: 2 means there's nothing initially on that slot
     // 9 two's for nine slots(3*3)
-    int[] gameState = {2,2,2,2,2,2,2,2,2};
+    int[] gameState = {2, 2, 2, 2, 2, 2, 2, 2, 2};
     // There are 8 different ways of wining this game(3 rows, 3 columns, and 2 diagonals). Let's define them:
-    int [][] winningPositions = {{0,1,2}, {3,4,5}, {6,7,8}, {0,3,6}, {1,4,7}, {2,5,8}, {0,4,8}, {2,4,6}};
-    public void dropIn(View view){
+    int[][] winningPositions = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, {2, 4, 6}};
+
+    public void dropIn(View view) {
         //Get the image tapped on
         ImageView counter = (ImageView) view;
         //Pushes the image up the screen by 1000 pixels
@@ -29,40 +33,43 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(counter.getTag().toString());
         int tappedTag = Integer.parseInt(counter.getTag().toString());
 
-        if (gameState[tappedTag] == 2){
+        if (gameState[tappedTag] == 2 && gameIsActive) {
             gameState[tappedTag] = activePlayer;
             counter.setTranslationY(-1000f);
 
-        if (activePlayer == 0){
-            // Set the green circle to the ImageView
-            counter.setImageResource(R.drawable.green);
-            activePlayer = 1;
-        } else{
-            // Set the blue circle to the ImageView
-            counter.setImageResource(R.drawable.blue);
-            activePlayer = 0;
+            if (activePlayer == 0) {
+                // Set the green circle to the ImageView
+                counter.setImageResource(R.drawable.green);
+                activePlayer = 1;
+            } else {
+                // Set the blue circle to the ImageView
+                counter.setImageResource(R.drawable.blue);
+                activePlayer = 0;
 
-        }
+            }
 
-        //Animate the ImageView back down
-        counter.animate().translationYBy(1000f).setDuration(200);
-        //Loop through the winningPositions
-            for (int[] winningPosition : winningPositions){
-                if(gameState[winningPosition[0]] == gameState[winningPosition[1]] &&
+            //Animate the ImageView back down
+            counter.animate().translationYBy(1000f).setDuration(200);
+
+            boolean hasWinner = false;
+            //Loop through the winningPositions
+            for (int[] winningPosition : winningPositions) {
+                if (gameState[winningPosition[0]] == gameState[winningPosition[1]] &&
                         gameState[winningPosition[1]] == gameState[winningPosition[2]]
-                && gameState[winningPosition[0]]!=2){
-                    String winner = "Blue";// We've set it to Blue by default
+                        && gameState[winningPosition[0]] != 2) {
 
-                    if (gameState[winningPosition[0]] == 0){
-                        winner = "Green";
+                    hasWinner = true;
 
-                    }
+                    //set game state to inactive
+                    gameIsActive = false;
+
+                    String winner = (gameState[winningPosition[0]] == 0) ? "Green" : "Blue";
 
                     //Update the winner message to show the winner before our layout appears
                     TextView winnerMessage = (TextView) findViewById(R.id.winnerMessage);
                     winnerMessage.setText(winner + " has won!");
                     //Display the playAgainLayout when someone has won
-                    LinearLayout layout = (LinearLayout)findViewById(R.id.playAgainLayout);
+                    LinearLayout layout = (LinearLayout) findViewById(R.id.playAgainLayout);
                     if (layout != null) {
                         layout.setVisibility(View.VISIBLE);
                         layout.setScaleX(0.7f);
@@ -76,27 +83,64 @@ public class MainActivity extends AppCompatActivity {
                                 .setStartDelay(0)
                                 .start();
                     }
+                    break; // Exit the loop since we found a winner
+                    //to handle players drawing
+
                 }
 
 
             }
+            // If no winner, check for a draw
+            if(!hasWinner){
+                boolean isDraw = true;
+                for (int state : gameState){
+                    if (state == 2){
+                        isDraw = false;
+                        break;
+                    }
+                }
+                if (isDraw){
+                    gameIsActive = false;
+
+                    TextView winnerMessage = findViewById(R.id.winnerMessage);
+                    winnerMessage.setText("It's a draw!");
+
+                    LinearLayout layout = findViewById(R.id.playAgainLayout);
+                    if (layout != null) {
+                        layout.setVisibility(View.VISIBLE);
+                        layout.setScaleX(0.7f);
+                        layout.setScaleY(0.7f);
+                        layout.setAlpha(0f);
+                        layout.animate()
+                                .scaleX(1f)
+                                .scaleY(1f)
+                                .alpha(1f)
+                                .setDuration(500)
+                                .start();
+                    }
+                }
+            }
 
 
-    }}
+        }
+    }
+
     public void playAgain(View view) {
-        LinearLayout layout = (LinearLayout)findViewById(R.id.playAgainLayout);
+        gameIsActive = true;
+        LinearLayout layout = (LinearLayout) findViewById(R.id.playAgainLayout);
         layout.setVisibility(View.INVISIBLE);
         //set the game and player back to the defaults
         activePlayer = 0;
-        for (int i = 0; i < gameState.length; i++){
+        for (int i = 0; i < gameState.length; i++) {
             gameState[i] = 2;
         }
         //Loop through all our images in the grid and remove their source
         GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayoutID);
-        for (int i = 0; i < gridLayout.getChildCount(); i++){
-            ((ImageView)gridLayout.getChildAt(i)).setImageResource(0);
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            ((ImageView) gridLayout.getChildAt(i)).setImageResource(0);
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
